@@ -90,3 +90,9 @@ CREATE TABLE "Categories" (
 INSERT INTO Categories ('label') VALUES ('News');
 INSERT INTO Tags ('label') VALUES ('JavaScript');
 INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
+
+-- CREATE SOME TEST USERS AND DATA
+
+INSERT INTO Users ('first_name', 'last_name', 'username', 'email', 'password', 'bio', 'created_on', 'active') 
+VALUES ('test_first', 'test_last', 'test', 'test@test.com', 'test', 'test bio', '2025-03-04 13:31:41.384415', 1);
+

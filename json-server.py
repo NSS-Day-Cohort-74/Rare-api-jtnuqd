@@ -1,7 +1,7 @@
 import json
 from http.server import HTTPServer
 from request_handler import HandleRequests, status
-from views import create_user
+from views import create_user, login_user
 
 
 class JSONServer(HandleRequests):
@@ -15,15 +15,12 @@ class JSONServer(HandleRequests):
         #     if url["pk"] != 0:
         #         response_body = retrieve_user(url["pk"])
         #         return self.response(response_body, status.HTTP_200_SUCCESS.value)
-
-        #     response_body = list_docks()
-        #     return self.response(response_body, status.HTTP_200_SUCCESS.value)
-
         # else:
         #     return self.response(
         #         "", status.HTTP_404_CLIENT_ERROR_RESOURCE_NOT_FOUND.value
         #     )
         pass
+        
 
     def do_PUT(self):
         pass
@@ -41,6 +38,9 @@ class JSONServer(HandleRequests):
         if url["requested_resource"] == "register":
             new_item = create_user(parsed_body)
             return self.response(new_item, status.HTTP_201_SUCCESS_CREATED.value)
+        elif url["requested_resource"] == "login":
+            new_item = login_user(parsed_body)
+            return self.response(new_item, status.HTTP_200_SUCCESS.value)
         else:
             return self.response(
                 "Invalid resource",
