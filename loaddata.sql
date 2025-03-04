@@ -11,6 +11,7 @@ CREATE TABLE "Users" (
   "active" bit
 );
 
+-- What is this?
 CREATE TABLE "DemotionQueue" (
   "action" varchar,
   "admin_id" INTEGER,
@@ -30,6 +31,7 @@ CREATE TABLE "Subscriptions" (
   FOREIGN KEY(`author_id`) REFERENCES `Users`(`id`)
 );
 
+-- category_id should also be a foreign key
 CREATE TABLE "Posts" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "user_id" INTEGER,
