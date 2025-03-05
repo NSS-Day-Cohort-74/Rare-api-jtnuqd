@@ -1,25 +1,29 @@
 import json
 from http.server import HTTPServer
 from request_handler import HandleRequests, status
-from views import create_user, login_user
+from views import create_user, login_user, view_all_posts
 
 
 class JSONServer(HandleRequests):
 
-    def do_GET(self):
-        # """Handle GET requests from a client"""
-        # response_body = ""
-        # url = self.parse_url(self.path)
 
-        # if url["requested_resource"] == "register":
-        #     if url["pk"] != 0:
-        #         response_body = retrieve_user(url["pk"])
-        #         return self.response(response_body, status.HTTP_200_SUCCESS.value)
-        # else:
-        #     return self.response(
-        #         "", status.HTTP_404_CLIENT_ERROR_RESOURCE_NOT_FOUND.value
-        #     )
-        pass
+    def do_GET(self):
+        """Handle GET requests from a client"""
+        response_body = ""
+        url = self.parse_url(self.path)
+
+        if url["requested_resource"] == "posts":
+            if url["pk"] != 0:
+                response_body = view_all_posts(url["pk"])
+                return self.response(response_body, status.HTTP_200_SUCCESS.value)
+            else:
+                response_body = view_all_posts()
+                return self.response(response_body, status.HTTP_200_SUCCESS.value)
+        else:
+            return self.response(
+                "", status.HTTP_404_CLIENT_ERROR_RESOURCE_NOT_FOUND.value
+            )
+        
         
 
     def do_PUT(self):

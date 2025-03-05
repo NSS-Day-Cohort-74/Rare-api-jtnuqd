@@ -1,3 +1,7 @@
+DELETE FROM Posts;
+DROP TABLE IF EXISTS Posts;
+
+
 CREATE TABLE "Users" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "first_name" varchar,
@@ -31,7 +35,6 @@ CREATE TABLE "Subscriptions" (
   FOREIGN KEY(`author_id`) REFERENCES `Users`(`id`)
 );
 
--- category_id should also be a foreign key
 CREATE TABLE "Posts" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "user_id" INTEGER,
@@ -41,7 +44,8 @@ CREATE TABLE "Posts" (
   "image_url" varchar,
   "content" varchar,
   "approved" bit,
-  FOREIGN KEY(`user_id`) REFERENCES `Users`(`id`)
+  FOREIGN KEY(`user_id`) REFERENCES `Users`(`id`),
+  FOREIGN KEY(`category_id`) REFERENCES `Categories`(`id`)
 );
 
 CREATE TABLE "Comments" (
@@ -91,8 +95,89 @@ INSERT INTO Categories ('label') VALUES ('News');
 INSERT INTO Tags ('label') VALUES ('JavaScript');
 INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.com/so/happy');
 
--- CREATE SOME TEST USERS AND DATA
 
-INSERT INTO Users ('first_name', 'last_name', 'username', 'email', 'password', 'bio', 'created_on', 'active') 
-VALUES ('test_first', 'test_last', 'test', 'test@test.com', 'test', 'test bio', '2025-03-04 13:31:41.384415', 1);
+
+-- Dummy Data for Testing Database:
+
+-- User Data
+INSERT INTO Users (first_name, last_name, email, bio, username, password, profile_image_url, created_on, active) 
+VALUES 
+('Alice', 'Smith', 'alice@example.com', 'Tech enthusiast and writer', 'alice_s', 'password123', 'https://example.com/images/alice.jpg', '2025-03-01', 1),
+('Bob', 'Johnson', 'bob@example.com', 'Lover of photography and film', 'bob_j', 'password123', 'https://example.com/images/bob.jpg', '2025-02-20', 1),
+('Charlie', 'Brown', 'charlie@example.com', 'Passionate about regenerative farming', 'charlie_b', 'password123', 'https://example.com/images/charlie.jpg', '2025-02-15', 1),
+('Diana', 'Miller', 'diana@example.com', 'Synthwave music creator', 'diana_m', 'password123', 'https://example.com/images/diana.jpg', '2025-01-30', 1),
+('Ethan', 'Williams', 'ethan@example.com', 'Game developer and indie creator', 'ethan_w', 'password123', 'https://example.com/images/ethan.jpg', '2025-01-10', 1);
+
+
+-- Categories
+INSERT INTO Categories (label) 
+VALUES 
+('Technology'),
+('Photography'),
+('Sustainability'),
+('Music'),
+('Gaming');
+
+-- Posts
+INSERT INTO Posts (user_id, category_id, title, publication_date, image_url, content, approved)
+VALUES 
+(1, 1, 'The Future of AI', '2025-03-02', 'https://example.com/images/ai.jpg', 'Exploring the impact of AI in daily life.', 1),
+(2, 2, 'Darkroom Techniques', '2025-02-25', 'https://example.com/images/darkroom.jpg', 'Keeping film photography alive.', 1),
+(3, 3, 'Regenerative Farming Benefits', '2025-02-18', 'https://example.com/images/farming.jpg', 'How regenerative farming is changing agriculture.', 1),
+(4, 4, 'Synthwave Revival', '2025-02-05', 'https://example.com/images/synthwave.jpg', 'Why 80s-inspired music is making a comeback.', 1),
+(5, 5, 'Game Development Tips', '2025-01-15', 'https://example.com/images/gamedev.jpg', 'Advice for indie game developers.', 1);
+
+-- Tags
+INSERT INTO Tags (label) 
+VALUES 
+('AI'),
+('Film'),
+('Farming'),
+('Synthwave'),
+('Indie Games');
+
+-- Comments
+INSERT INTO Comments (post_id, author_id, content) 
+VALUES 
+(1, 2, 'Great insights on AI!'),
+(2, 3, 'Love film photography, thanks for sharing!'),
+(3, 4, 'Regenerative farming is the future.'),
+(4, 5, 'Synthwave forever!'),
+(5, 1, 'Really helpful tips, thanks!');
+
+-- Subscriptions
+INSERT INTO Subscriptions (follower_id, author_id, created_on)
+VALUES 
+(1, 2, '2025-03-03'),
+(2, 3, '2025-03-02'),
+(3, 4, '2025-03-01'),
+(4, 5, '2025-02-28'),
+(5, 1, '2025-02-27');
+
+-- Reactions
+INSERT INTO Reactions (label, image_url)
+VALUES 
+('Like', 'https://example.com/images/like.png'),
+('Love', 'https://example.com/images/love.png'),
+('Wow', 'https://example.com/images/wow.png'),
+('Funny', 'https://example.com/images/funny.png'),
+('Sad', 'https://example.com/images/sad.png');
+
+-- Post Reactions
+INSERT INTO PostReactions (user_id, reaction_id, post_id)
+VALUES 
+(1, 1, 1), -- Alice likes AI article
+(2, 2, 2), -- Bob loves Film article
+(3, 3, 3), -- Charlie is wowed by Farming
+(4, 4, 4), -- Diana finds Synthwave funny (maybe ironically!)
+(5, 5, 5); -- Ethan is sad about game dev struggles
+
+-- Post Tags
+INSERT INTO PostTags (post_id, tag_id)
+VALUES 
+(1, 1), -- AI tag for AI article
+(2, 2), -- Film tag for photography article
+(3, 3), -- Farming tag for sustainability article
+(4, 4), -- Synthwave tag for music article
+(5, 5); -- Indie Games tag for game dev article
 
