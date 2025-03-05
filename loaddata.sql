@@ -1,6 +1,9 @@
 DELETE FROM Posts;
 DROP TABLE IF EXISTS Posts;
 
+DELETE FROM Users;
+DROP TABLE IF EXISTS Users;
+
 
 CREATE TABLE "Users" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -102,11 +105,11 @@ INSERT INTO Reactions ('label', 'image_url') VALUES ('happy', 'https://pngtree.c
 -- User Data
 INSERT INTO Users (first_name, last_name, email, bio, username, password, profile_image_url, created_on, active) 
 VALUES 
-('Alice', 'Smith', 'alice@example.com', 'Tech enthusiast and writer', 'alice_s', 'password123', 'https://example.com/images/alice.jpg', '2025-03-01', 1),
-('Bob', 'Johnson', 'bob@example.com', 'Lover of photography and film', 'bob_j', 'password123', 'https://example.com/images/bob.jpg', '2025-02-20', 1),
-('Charlie', 'Brown', 'charlie@example.com', 'Passionate about regenerative farming', 'charlie_b', 'password123', 'https://example.com/images/charlie.jpg', '2025-02-15', 1),
-('Diana', 'Miller', 'diana@example.com', 'Synthwave music creator', 'diana_m', 'password123', 'https://example.com/images/diana.jpg', '2025-01-30', 1),
-('Ethan', 'Williams', 'ethan@example.com', 'Game developer and indie creator', 'ethan_w', 'password123', 'https://example.com/images/ethan.jpg', '2025-01-10', 1);
+('Alice', 'Smith', 'alice@example.com', 'Tech enthusiast and writer', 'alices', 'password123', 'https://example.com/images/alice.jpg', '2025-03-01 13:31:41.384415', 1),
+('Bob', 'Johnson', 'bob@example.com', 'Lover of photography and film', 'bobj', 'password123', 'https://example.com/images/bob.jpg', '2025-02-20 13:31:41.384415', 1),
+('Charlie', 'Brown', 'charlie@example.com', 'Passionate about regenerative farming', 'charlieb', 'password123', 'https://example.com/images/charlie.jpg', '2025-02-15 13:31:41.384415', 1),
+('Diana', 'Miller', 'diana@example.com', 'Synthwave music creator', 'diana_m', 'password123', 'https://example.com/images/diana.jpg', '2025-01-30 13:31:41.384415', 1),
+('Ethan', 'Williams', 'ethan@example.com', 'Game developer and indie creator', 'ethan_w', 'password123', 'https://example.com/images/ethan.jpg', '2025-01-10 13:31:41.384415', 1);
 
 
 -- Categories

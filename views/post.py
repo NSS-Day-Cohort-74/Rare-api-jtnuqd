@@ -1,7 +1,6 @@
 import sqlite3
 import json 
 
-
  # All posts should include post title, author name and category and date added.
 
 def view_all_posts():
@@ -33,8 +32,61 @@ def view_all_posts():
 
         
         sorted_results = sorted(posts, key=lambda post: post['publication_date'], reverse = True)
-        print(sorted_results)
         serialized_results = json.dumps(sorted_results) if posts else []
     return serialized_results
 
 # sorted_data = sorted(data, key=lambda x: x["name"])
+
+def view_post_detail(pk):
+    with sqlite3.connect("./db.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+        
+        db_cursor.execute("""
+        SELECT
+            p.id, 
+            p.title,
+            p.publication_date, 
+            p.category_id,
+            p.user_id,
+            p.content,
+            c.label AS category_label,
+            u.first_name,
+            u.last_name
+        FROM Posts AS p
+        JOIN Categories c ON c.id = p.category_id
+        JOIN Users u ON u.id = p.user_id
+        WHERE p.id = ?          
+        """,
+        (pk,)
+        )
+
+        # Retrieve Results:
+        query_result = db_cursor.fetchone()
+        dictionary_version_of_object = dict(query_result) if query_result else {}
+
+        serialized_result = json.dumps(dictionary_version_of_object)
+    return serialized_result
+
+def create_post(post_data):
+    with sqlite3.connect("./db.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute(
+            """
+            INSERT INTO Posts
+            (user_id, category_id, title, publication_date, image_url, content, approved)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (post_data["user_id"],post_data["category_id"], post_data["title"], post_data["publication_date"], post_data["image_url"], post_data["content"], post_data["approved"] )
+        )
+
+        rows_affected = db_cursor.rowcount
+    
+    return True if rows_affected > 0 else False
+
+def edit_post():
+    pass
+
+def delete_post(): 
+    pass

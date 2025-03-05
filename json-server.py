@@ -1,7 +1,7 @@
 import json
 from http.server import HTTPServer
 from request_handler import HandleRequests, status
-from views import create_user, login_user, view_all_posts
+from views import create_user, login_user, view_all_posts, view_all_tags, view_all_categories, view_post_detail
 
 
 class JSONServer(HandleRequests):
@@ -14,11 +14,18 @@ class JSONServer(HandleRequests):
 
         if url["requested_resource"] == "posts":
             if url["pk"] != 0:
-                response_body = view_all_posts(url["pk"])
+                response_body = view_post_detail(url["pk"])
                 return self.response(response_body, status.HTTP_200_SUCCESS.value)
             else:
                 response_body = view_all_posts()
                 return self.response(response_body, status.HTTP_200_SUCCESS.value)
+        elif url["requested_resource"] == "tags":
+            response_body = view_all_tags()
+            return self.response(response_body, status.HTTP_200_SUCCESS.value)
+        elif url["requested_resource"] == "categories":
+            # print("hitting categories")
+            response_body = view_all_categories()
+            return self.response(response_body, status.HTTP_200_SUCCESS.value)
         else:
             return self.response(
                 "", status.HTTP_404_CLIENT_ERROR_RESOURCE_NOT_FOUND.value
