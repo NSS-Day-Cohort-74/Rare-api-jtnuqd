@@ -108,3 +108,7 @@ def edit_post():
 
 def delete_post():
     pass
+
+
+def get_current_user_posts():
+    pass
