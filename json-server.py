@@ -1,11 +1,18 @@
 import json
 from http.server import HTTPServer
 from request_handler import HandleRequests, status
-from views import create_user, login_user, view_all_posts, view_all_tags, view_all_categories, view_post_detail
+from views import (
+    create_user,
+    login_user,
+    view_all_posts,
+    view_all_tags,
+    view_all_categories,
+    view_post_detail,
+    create_post,
+)
 
 
 class JSONServer(HandleRequests):
-
 
     def do_GET(self):
         """Handle GET requests from a client"""
@@ -30,8 +37,6 @@ class JSONServer(HandleRequests):
             return self.response(
                 "", status.HTTP_404_CLIENT_ERROR_RESOURCE_NOT_FOUND.value
             )
-        
-        
 
     def do_PUT(self):
         pass
@@ -52,6 +57,9 @@ class JSONServer(HandleRequests):
         elif url["requested_resource"] == "login":
             new_item = login_user(parsed_body)
             return self.response(new_item, status.HTTP_200_SUCCESS.value)
+        elif url["requested_resource"] == "new_post":
+            new_item = create_post(parsed_body)
+            return self.response(str(new_item), status.HTTP_201_SUCCESS_CREATED.value)
         else:
             return self.response(
                 "Invalid resource",
