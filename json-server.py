@@ -9,6 +9,8 @@ from views import (
     view_all_categories,
     view_post_detail,
     create_post,
+    create_category,
+    create_tag,
 )
 
 
@@ -57,9 +59,18 @@ class JSONServer(HandleRequests):
         elif url["requested_resource"] == "login":
             new_item = login_user(parsed_body)
             return self.response(new_item, status.HTTP_200_SUCCESS.value)
-        elif url["requested_resource"] == "new_post":
+        elif url["requested_resource"] == "posts":
             new_item = create_post(parsed_body)
             return self.response(str(new_item), status.HTTP_201_SUCCESS_CREATED.value)
+        elif url["requested_resource"] == "categories":
+            new_item = create_category(parsed_body)
+            return self.response(
+                "",
+                status.HTTP_201_SUCCESS_CREATED.value,
+            )
+        elif url["requested_resource"] == "tags":
+            new_item = create_tag(parsed_body)
+            return self.response("", status.HTTP_201_SUCCESS_CREATED.value)
         else:
             return self.response(
                 "Invalid resource",

@@ -3,6 +3,7 @@ import json
 
 # NOTE: Tested
 
+
 def view_all_tags():
     with sqlite3.connect("./db.sqlite3") as conn:
         conn.row_factory = sqlite3.Row
@@ -29,5 +30,18 @@ def view_all_tags():
 
     return serialized_results
 
-def create_tag():
-    pass
+
+def create_tag(tag_data):
+    with sqlite3.connect("./db.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute(
+            """
+            INSERT INTO tags
+            (label)
+            VALUES(?)
+            """,
+            (tag_data["label"],),
+        )
+
+        return True if db_cursor.rowcount > 0 else False

@@ -3,6 +3,7 @@ import json
 
 # NOTE: Not tested yet.
 
+
 def view_all_categories():
     with sqlite3.connect("./db.sqlite3") as conn:
         conn.row_factory = sqlite3.Row
@@ -29,5 +30,18 @@ def view_all_categories():
 
     return serialized_results
 
-def create_category(): 
-    pass
+
+def create_category(cat_data):
+    with sqlite3.connect("./db.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute(
+            """
+            INSERT INTO Categories
+            (label)
+            VALUES (?)
+            """,
+            (cat_data["label"],),
+        )
+
+    return True if db_cursor.rowcount > 0 else False
