@@ -36,7 +36,7 @@ def view_all_posts():
         sorted_results = sorted(
             posts, key=lambda post: post["publication_date"], reverse=True
         )
-        serialized_results = json.dumps(sorted_results) if posts else []
+        serialized_results = json.dumps(sorted_results) if posts else {}
     return serialized_results
 
 
@@ -110,5 +110,36 @@ def delete_post():
     pass
 
 
-def get_current_user_posts():
-    pass
+def get_current_user_posts(user_id):
+    with sqlite3.connect("./db.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute(
+            """
+            SELECT
+                p.id, 
+                p.title,
+                p.publication_date, 
+                u.first_name,
+                u.last_name
+            FROM
+            posts AS p
+            JOIN Users u ON u.id = p.user_id
+            WHERE
+            p.user_id = ?
+            """,
+            (user_id,),
+        )
+
+        query_results = db_cursor.fetchall()
+
+        posts = []
+
+        for row in query_results:
+            posts.append(dict(row))
+
+        # sorted_results = sorted(posts, key=lambda tag: tag["label"])
+        serialized_results = json.dumps(posts)
+
+    return serialized_results

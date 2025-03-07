@@ -11,6 +11,7 @@ from views import (
     create_post,
     create_category,
     create_tag,
+    get_current_user_posts,
 )
 
 
@@ -35,6 +36,15 @@ class JSONServer(HandleRequests):
             # print("hitting categories")
             response_body = view_all_categories()
             return self.response(response_body, status.HTTP_200_SUCCESS.value)
+        elif url["requested_resource"] == "myposts":
+            if url["pk"] != 0:
+                response_body = get_current_user_posts(url["pk"])
+                print(response_body)
+                return self.response(response_body, status.HTTP_200_SUCCESS.value)
+
+            return self.response(
+                "", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value
+            )
         else:
             return self.response(
                 "", status.HTTP_404_CLIENT_ERROR_RESOURCE_NOT_FOUND.value
