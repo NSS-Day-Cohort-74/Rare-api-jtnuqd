@@ -39,7 +39,6 @@ class JSONServer(HandleRequests):
         elif url["requested_resource"] == "myposts":
             if url["pk"] != 0:
                 response_body = get_current_user_posts(url["pk"])
-                print(response_body)
                 return self.response(response_body, status.HTTP_200_SUCCESS.value)
 
             return self.response(
