@@ -9,9 +9,11 @@ from views import (
     view_all_categories,
     view_post_detail,
     create_post,
+    edit_post,
     create_category,
     create_tag,
     get_current_user_posts,
+    delete_post,
 )
 
 
@@ -40,7 +42,6 @@ class JSONServer(HandleRequests):
             if url["pk"] != 0:
                 response_body = get_current_user_posts(url["pk"])
                 return self.response(response_body, status.HTTP_200_SUCCESS.value)
-
             return self.response(
                 "", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value
             )
@@ -50,7 +51,25 @@ class JSONServer(HandleRequests):
             )
 
     def do_PUT(self):
-        pass
+        url = self.parse_url(self.path)
+        pk = url["pk"]
+
+        content_len = int(self.headers.get("content-length", 0))
+        request_body = self.rfile.read(content_len)
+        decoded = request_body.decode("utf-8")  # Convert bytes to string
+        parsed_body = json.loads(decoded)  # Parse JSON string into dictionary
+
+        if url["requested_resource"] == "posts":
+            if pk != 0:
+                successfully_updated = edit_post(pk, parsed_body)
+                if successfully_updated:
+                    return self.response(
+                        "", status.HTTP_204_SUCCESS_NO_RESPONSE_BODY.value
+                    )
+        return self.response(
+            "Requested resource not found",
+            status.HTTP_404_CLIENT_ERROR_RESOURCE_NOT_FOUND.value,
+        )
 
     def do_POST(self):
         """Handle POST requests from a client"""
@@ -88,7 +107,16 @@ class JSONServer(HandleRequests):
             )
 
     def do_DELETE(self):
-        pass
+        url = self.parse_url(self.path)
+        pk = url["pk"]
+
+        if url["requested_resource"] == "posts":
+            if pk != 0:
+                successfully_deleted = delete_post(pk)
+                if successfully_deleted:
+                    return self.response(
+                        "", status.HTTP_204_SUCCESS_NO_RESPONSE_BODY.value
+                    )
 
 
 def main():
