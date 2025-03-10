@@ -14,6 +14,7 @@ from views import (
     create_tag,
     get_current_user_posts,
     delete_post,
+    get_all_users,
 )
 
 
@@ -45,6 +46,9 @@ class JSONServer(HandleRequests):
             return self.response(
                 "", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value
             )
+        elif url["requested_resource"] == "users":
+            response_body = get_all_users()
+            return self.response(response_body, status.HTTP_200_SUCCESS.value)
         else:
             return self.response(
                 "", status.HTTP_404_CLIENT_ERROR_RESOURCE_NOT_FOUND.value
