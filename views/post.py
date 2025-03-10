@@ -57,6 +57,7 @@ def view_post_detail(pk):
             p.category_id,
             p.user_id,
             p.content,
+            p.approved,
             c.label AS category_label,
             u.first_name,
             u.last_name
@@ -114,16 +115,22 @@ def edit_post(pk, post_data):
             SET
                 category_id = ?,
                 title = ?,
+                publication_date = ?,
+                image_url = ?,
                 content = ?,
-                image_url = ?
+                approved = ?,
+                user_id = ?
             WHERE
                 id = ?
             """,
             (
                 post_data["category_id"],
                 post_data["title"],
+                post_data["publication_date"],
                 post_data["image_url"],
                 post_data["content"],
+                post_data["approved"],
+                post_data["user_id"],
                 pk,
             ),
         )
@@ -158,7 +165,7 @@ def get_current_user_posts(user_id):
                 p.id, 
                 p.title,
                 p.publication_date,
-                u.id, 
+                u.id,
                 u.first_name,
                 u.last_name
             FROM
