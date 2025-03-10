@@ -102,12 +102,49 @@ def create_post(post_data):
     return new_post_id if new_post_id else None
 
 
-def edit_post():
-    pass
+def edit_post(pk, post_data):
+    with sqlite3.connect("./db.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute(
+            """
+            UPDATE 
+                Posts
+            SET
+                category_id = ?,
+                title = ?,
+                content = ?,
+                image_url = ?
+            WHERE
+                id = ?
+            """,
+            (
+                post_data["category_id"],
+                post_data["title"],
+                post_data["image_url"],
+                post_data["content"],
+                pk,
+            ),
+        )
+        rows_affected = db_cursor.rowcount
+    return True if rows_affected > 0 else False
 
 
-def delete_post():
-    pass
+def delete_post(pk):
+    with sqlite3.connect("./db.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute(
+            """
+            DELETE FROM Posts WHERE id = ?
+            """,
+            (pk,),
+        )
+        number_of_rows_deleted = db_cursor.rowcount
+
+    return True if number_of_rows_deleted > 0 else False
 
 
 def get_current_user_posts(user_id):
@@ -120,12 +157,13 @@ def get_current_user_posts(user_id):
             SELECT
                 p.id, 
                 p.title,
-                p.publication_date, 
+                p.publication_date,
+                u.id as user_id, 
                 u.first_name,
                 u.last_name
             FROM
             posts AS p
-            JOIN Users u ON u.id = p.user_id
+            JOIN Users u ON user_id = p.user_id
             WHERE
             p.user_id = ?
             """,
