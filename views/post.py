@@ -158,12 +158,12 @@ def get_current_user_posts(user_id):
                 p.id, 
                 p.title,
                 p.publication_date,
-                u.id as user_id, 
+                u.id, 
                 u.first_name,
                 u.last_name
             FROM
             posts AS p
-            JOIN Users u ON user_id = p.user_id
+            JOIN Users u ON u.id = p.user_id
             WHERE
             p.user_id = ?
             """,
