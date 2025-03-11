@@ -100,6 +100,17 @@ def create_post(post_data):
 
         new_post_id = db_cursor.lastrowid
 
+        if "tag_ids" in post_data and post_data["tag_ids"]:
+            for tag_id in post_data["tag_ids"]:
+                db_cursor.execute(
+                    """
+                    INSERT INTO PostTags 
+                    (post_id, tag_id)
+                    VALUES (?, ?)
+                    """,
+                    (new_post_id, tag_id),
+                )
+
     return new_post_id if new_post_id else None
 
 
