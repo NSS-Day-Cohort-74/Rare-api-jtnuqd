@@ -117,7 +117,8 @@ def get_user_detail(pk):
             u.username,
             u.profile_image_url,
             u.created_on,
-            s.follower_id
+            s.follower_id,
+            s.id as sub_id
         FROM Users u
         JOIN Subscriptions s on s.author_id = u.id
         WHERE u.id = ?
@@ -140,7 +141,7 @@ def get_user_detail(pk):
             "profile_image_url": query_results[0]["profile_image_url"],
             "created_on": query_results[0]["created_on"],
             "followers": [
-                row["follower_id"]
+                (row["follower_id"], row["sub_id"])
                 for row in query_results
                 if row["follower_id"] is not None
             ],
