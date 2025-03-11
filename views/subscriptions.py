@@ -19,3 +19,14 @@ def create_subscription(data):
         )
 
     return True if db_cursor.rowcount > 0 else False
+
+
+def delete_subscription(pk):
+    with sqlite3.connect("./db.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute(
+            """
+            DELETE FROM Subscriptions WHERE id = ?
+            """
+        )
