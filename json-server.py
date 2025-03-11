@@ -16,6 +16,7 @@ from views import (
     delete_post,
     get_all_users,
     get_user_detail,
+    create_subscription,
 )
 
 
@@ -108,6 +109,9 @@ class JSONServer(HandleRequests):
         elif url["requested_resource"] == "tags":
             new_item = create_tag(parsed_body)
             return self.response("", status.HTTP_201_SUCCESS_CREATED.value)
+        elif url["requested_resource"] == "subscriptions":
+            new_item = create_subscription(parsed_body)
+            return self.response(new_item, status.HTTP_201_SUCCESS_CREATED.value)
         else:
             return self.response(
                 "Invalid resource",

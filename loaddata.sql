@@ -276,3 +276,6 @@ VALUES (1, 1),
   -- Synthwave tag for music article
   (5, 5);
 -- Indie Games tag for game dev article
+
+INSERT INTO Subscriptions (follower_id, author_id, created_on)
+VALUES (2, 1, '2025-03-11');

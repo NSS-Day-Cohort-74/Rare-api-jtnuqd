@@ -116,14 +116,34 @@ def get_user_detail(pk):
             u.bio,
             u.username,
             u.profile_image_url,
-            u.created_on
+            u.created_on,
+            s.follower_id
         FROM Users u
+        JOIN Subscriptions s on s.author_id = u.id
         WHERE u.id = ?
         """,
             (pk,),
         )
 
-        query_result = db_cursor.fetchone()
-        dictionary_version = dict(query_result)
-        serialized_result = json.dumps(dictionary_version)
+        query_results = db_cursor.fetchall()
+
+        if not query_results:
+            return json.dumps({"error": "User not found"})
+
+        user_data = {
+            "id": query_results[0]["id"],
+            "first_name": query_results[0]["first_name"],
+            "last_name": query_results[0]["last_name"],
+            "email": query_results[0]["email"],
+            "bio": query_results[0]["bio"],
+            "username": query_results[0]["username"],
+            "profile_image_url": query_results[0]["profile_image_url"],
+            "created_on": query_results[0]["created_on"],
+            "followers": [
+                row["follower_id"]
+                for row in query_results
+                if row["follower_id"] is not None
+            ],
+        }
+        serialized_result = json.dumps(user_data)
     return serialized_result
