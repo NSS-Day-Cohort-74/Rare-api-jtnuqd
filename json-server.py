@@ -15,7 +15,9 @@ from views import (
     get_current_user_posts,
     delete_post,
     view_follower_subscriptions,
-    view_post_comments
+    view_post_comments,
+    get_all_users,
+    get_user_detail,
 )
 
 
@@ -57,6 +59,12 @@ class JSONServer(HandleRequests):
                 response_body = view_post_comments(url["pk"])
                 return self.response(response_body, status.HTTP_200_SUCCESS.value)
             return self.response("", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value)
+        elif url["requested_resource"] == "users":
+            if url["pk"] != 0:
+                response_body = get_user_detail(url["pk"])
+                return self.response(response_body, status.HTTP_200_SUCCESS.value)
+            response_body = get_all_users()
+            return self.response(response_body, status.HTTP_200_SUCCESS.value)
         else:
             return self.response(
                 "", status.HTTP_404_CLIENT_ERROR_RESOURCE_NOT_FOUND.value
