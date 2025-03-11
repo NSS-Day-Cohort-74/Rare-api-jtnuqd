@@ -16,6 +16,8 @@ from views import (
     delete_post,
     view_follower_subscriptions,
     get_all_users,
+    get_user_detail,
+    create_subscription,
 )
 
 
@@ -53,6 +55,9 @@ class JSONServer(HandleRequests):
                 return self.response(response_body, status.HTTP_200_SUCCESS.value)
             return self.response("", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value)
         elif url["requested_resource"] == "users":
+            if url["pk"] != 0:
+                response_body = get_user_detail(url["pk"])
+                return self.response(response_body, status.HTTP_200_SUCCESS.value)
             response_body = get_all_users()
             return self.response(response_body, status.HTTP_200_SUCCESS.value)
         else:
@@ -110,6 +115,9 @@ class JSONServer(HandleRequests):
         elif url["requested_resource"] == "tags":
             new_item = create_tag(parsed_body)
             return self.response("", status.HTTP_201_SUCCESS_CREATED.value)
+        elif url["requested_resource"] == "subscriptions":
+            new_item = create_subscription(parsed_body)
+            return self.response(new_item, status.HTTP_201_SUCCESS_CREATED.value)
         else:
             return self.response(
                 "Invalid resource",
