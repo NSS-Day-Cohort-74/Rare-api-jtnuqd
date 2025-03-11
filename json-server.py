@@ -14,6 +14,7 @@ from views import (
     create_tag,
     get_current_user_posts,
     delete_post,
+    view_follower_subscriptions,
     get_all_users,
     get_user_detail,
     create_subscription,
@@ -48,6 +49,11 @@ class JSONServer(HandleRequests):
             return self.response(
                 "", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value
             )
+        elif url["requested_resource"] == "subscriptions":
+            if url["pk"] != 0:
+                response_body = view_follower_subscriptions(url["pk"])
+                return self.response(response_body, status.HTTP_200_SUCCESS.value)
+            return self.response("", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value)
         elif url["requested_resource"] == "users":
             if url["pk"] != 0:
                 response_body = get_user_detail(url["pk"])
