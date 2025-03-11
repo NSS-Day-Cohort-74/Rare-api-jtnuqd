@@ -71,4 +71,31 @@ def create_user(user):
 
 
 def get_all_users():
-    pass
+    with sqlite3.connect("./db.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+
+        db_cursor.execute(
+            """
+        SELECT 
+            u.id,
+            u.first_name,
+            u.last_name,
+            u.email,
+            u.bio,
+            u.username
+        FROM Users as u
+        """
+        )
+
+        users_from_db = db_cursor.fetchall()
+
+        users = []
+
+        for row in users_from_db:
+            users.append(dict(row))
+
+        sorted_results = sorted(users, key=lambda user: user["username"], reverse=False)
+
+        serialized_results = json.dumps(sorted_results)
+    return serialized_results
