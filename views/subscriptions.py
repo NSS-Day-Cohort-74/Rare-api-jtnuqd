@@ -33,7 +33,7 @@ def delete_subscription(pk):
             (pk,),
         )
 
-        return True if db_cursor.rowcount > 0 else False
+    return True if db_cursor.rowcount > 0 else False
 
 
 def view_follower_subscriptions(follower_id):
