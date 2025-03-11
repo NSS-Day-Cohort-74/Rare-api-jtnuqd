@@ -14,9 +14,11 @@ def view_post_comments(post_id):
                 c.author_id,
                 c.content,
                 u.first_name,
-                u.last_name
+                u.last_name,
+                p.title
             FROM Comments c
             JOIN Users u ON u.id = c.author_id
+            JOIN Posts p ON p.id = c.post_id
             WHERE c.post_id = ?
             """,
             (post_id,),
