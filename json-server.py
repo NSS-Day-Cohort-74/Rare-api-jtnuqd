@@ -111,7 +111,7 @@ class JSONServer(HandleRequests):
             return self.response("", status.HTTP_201_SUCCESS_CREATED.value)
         elif url["requested_resource"] == "subscriptions":
             new_item = create_subscription(parsed_body)
-            return self.response("", status.HTTP_201_SUCCESS_CREATED.value)
+            return self.response(new_item, status.HTTP_201_SUCCESS_CREATED.value)
         else:
             return self.response(
                 "Invalid resource",
