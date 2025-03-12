@@ -82,8 +82,8 @@ class JSONServer(HandleRequests):
 
         content_len = int(self.headers.get("content-length", 0))
         request_body = self.rfile.read(content_len)
-        decoded = request_body.decode("utf-8")  # Convert bytes to string
-        parsed_body = json.loads(decoded)  # Parse JSON string into dictionary
+        # decoded = request_body.decode("utf-8")  # Convert bytes to string
+        parsed_body = json.loads(request_body)  # Parse JSON string into dictionary
 
         if url["requested_resource"] == "posts":
             if pk != 0:
@@ -153,7 +153,8 @@ class JSONServer(HandleRequests):
                 successfully_deleted = delete_subscription(pk)
                 if successfully_deleted:
                     return self.response(
-                        "", status.HTTP_204_SUCCESS_NO_RESPONSE_BODY.value
+                        "Delete Successful",
+                        status.HTTP_200_SUCCESS.value,
                     )
 
 
