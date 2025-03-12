@@ -19,7 +19,8 @@ from views import (
     get_all_users,
     get_user_detail,
     create_subscription,
-    create_comment
+    create_comment,
+    delete_subscription,
 )
 
 
@@ -55,12 +56,16 @@ class JSONServer(HandleRequests):
             if url["pk"] != 0:
                 response_body = view_follower_subscriptions(url["pk"])
                 return self.response(response_body, status.HTTP_200_SUCCESS.value)
-            return self.response("", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value)
+            return self.response(
+                "", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value
+            )
         elif url["requested_resource"] == "comments":
             if url["pk"] != 0:
                 response_body = view_post_comments(url["pk"])
                 return self.response(response_body, status.HTTP_200_SUCCESS.value)
-            return self.response("", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value)
+            return self.response(
+                "", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value
+            )
         elif url["requested_resource"] == "users":
             if url["pk"] != 0:
                 response_body = get_user_detail(url["pk"])
@@ -78,8 +83,8 @@ class JSONServer(HandleRequests):
 
         content_len = int(self.headers.get("content-length", 0))
         request_body = self.rfile.read(content_len)
-        decoded = request_body.decode("utf-8")  # Convert bytes to string
-        parsed_body = json.loads(decoded)  # Parse JSON string into dictionary
+        # decoded = request_body.decode("utf-8")  # Convert bytes to string
+        parsed_body = json.loads(request_body)  # Parse JSON string into dictionary
 
         if url["requested_resource"] == "posts":
             if pk != 0:
@@ -124,10 +129,13 @@ class JSONServer(HandleRequests):
             return self.response("", status.HTTP_201_SUCCESS_CREATED.value)
         elif url["requested_resource"] == "subscriptions":
             new_item = create_subscription(parsed_body)
-            return self.response(new_item, status.HTTP_201_SUCCESS_CREATED.value)
+            return self.response(
+                json.dumps(new_item), status.HTTP_201_SUCCESS_CREATED.value
+            )            
         elif url["requested_resource"] == "comments":
             new_item = create_comment(parsed_body)
             return self.response("", status.HTTP_201_SUCCESS_CREATED.value)
+            
         else:
             return self.response(
                 "Invalid resource",
@@ -144,6 +152,14 @@ class JSONServer(HandleRequests):
                 if successfully_deleted:
                     return self.response(
                         "", status.HTTP_204_SUCCESS_NO_RESPONSE_BODY.value
+                    )
+        elif url["requested_resource"] == "subscriptions":
+            if pk != 0:
+                successfully_deleted = delete_subscription(pk)
+                if successfully_deleted:
+                    return self.response(
+                        "Delete Successful",
+                        status.HTTP_200_SUCCESS.value,
                     )
 
 
