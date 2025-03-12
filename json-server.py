@@ -19,6 +19,7 @@ from views import (
     get_all_users,
     get_user_detail,
     create_subscription,
+    create_comment,
     delete_subscription,
 )
 
@@ -130,7 +131,11 @@ class JSONServer(HandleRequests):
             new_item = create_subscription(parsed_body)
             return self.response(
                 json.dumps(new_item), status.HTTP_201_SUCCESS_CREATED.value
-            )
+            )            
+        elif url["requested_resource"] == "comments":
+            new_item = create_comment(parsed_body)
+            return self.response("", status.HTTP_201_SUCCESS_CREATED.value)
+            
         else:
             return self.response(
                 "Invalid resource",

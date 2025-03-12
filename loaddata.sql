@@ -6,6 +6,8 @@ DELETE FROM Categories;
 DROP TABLE IF EXISTS Categories;
 DELETE FROM Users;
 DROP TABLE IF EXISTS Users;
+DELETE FROM Comments;
+DROP TABLE IF EXISTS Comments;
 CREATE TABLE "Users" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "first_name" varchar,
