@@ -9,6 +9,9 @@ from .post import (
 )
 from .tag import view_all_tags, create_tag
 from .category import view_all_categories, create_category
+from .comments import view_post_comments
+from .subscriptions import create_subscription
+from .post_tags import view_all_post_tags
 from .comments import view_post_comments, create_comment, delete_comment
 from .subscriptions import (
     create_subscription,
