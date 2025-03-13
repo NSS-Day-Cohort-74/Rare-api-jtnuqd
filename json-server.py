@@ -20,6 +20,9 @@ from views import (
     get_user_detail,
     create_subscription,
     view_all_post_tags,
+    create_comment,
+    delete_subscription,
+    delete_comment
 )
 
 
@@ -86,8 +89,8 @@ class JSONServer(HandleRequests):
 
         content_len = int(self.headers.get("content-length", 0))
         request_body = self.rfile.read(content_len)
-        decoded = request_body.decode("utf-8")  # Convert bytes to string
-        parsed_body = json.loads(decoded)  # Parse JSON string into dictionary
+        # decoded = request_body.decode("utf-8")  # Convert bytes to string
+        parsed_body = json.loads(request_body)  # Parse JSON string into dictionary
 
         if url["requested_resource"] == "posts":
             if pk != 0:
@@ -132,7 +135,13 @@ class JSONServer(HandleRequests):
             return self.response("", status.HTTP_201_SUCCESS_CREATED.value)
         elif url["requested_resource"] == "subscriptions":
             new_item = create_subscription(parsed_body)
-            return self.response(new_item, status.HTTP_201_SUCCESS_CREATED.value)
+            return self.response(
+                json.dumps(new_item), status.HTTP_201_SUCCESS_CREATED.value
+            )            
+        elif url["requested_resource"] == "comments":
+            new_item = create_comment(parsed_body)
+            return self.response("", status.HTTP_201_SUCCESS_CREATED.value)
+            
         else:
             return self.response(
                 "Invalid resource",
@@ -150,6 +159,19 @@ class JSONServer(HandleRequests):
                     return self.response(
                         "", status.HTTP_204_SUCCESS_NO_RESPONSE_BODY.value
                     )
+        elif url["requested_resource"] == "subscriptions":
+            if pk != 0:
+                successfully_deleted = delete_subscription(pk)
+                if successfully_deleted:
+                    return self.response(
+                        "Delete Successful",
+                        status.HTTP_200_SUCCESS.value,
+                    )
+        elif url["requested_resource"] == "comments":
+            if pk != 0:
+                successfully_deleted = delete_comment(pk)
+                if successfully_deleted:
+                    return self.response("Delete Successful", status.HTTP_200_SUCCESS.value)
 
 
 def main():
