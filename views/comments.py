@@ -49,3 +49,16 @@ def create_comment(comment_data):
         )
 
     return True if db_cursor.rowcount > 0 else False
+
+def delete_comment(pk):
+    with sqlite3.connect("./db.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute(
+            """
+            DELETE FROM Comments WHERE id = ?
+            """,
+            (pk,),
+        )
+
+    return True if db_cursor.rowcount > 0 else False

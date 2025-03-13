@@ -21,6 +21,7 @@ from views import (
     create_subscription,
     create_comment,
     delete_subscription,
+    delete_comment
 )
 
 
@@ -161,6 +162,11 @@ class JSONServer(HandleRequests):
                         "Delete Successful",
                         status.HTTP_200_SUCCESS.value,
                     )
+        elif url["requested_resource"] == "comments":
+            if pk != 0:
+                successfully_deleted = delete_comment(pk)
+                if successfully_deleted:
+                    return self.response("Delete Successful", status.HTTP_200_SUCCESS.value)
 
 
 def main():
