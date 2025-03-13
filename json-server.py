@@ -19,9 +19,10 @@ from views import (
     get_all_users,
     get_user_detail,
     create_subscription,
+    view_all_post_tags,
     create_comment,
     delete_subscription,
-    delete_comment
+    delete_comment,
 )
 
 
@@ -46,6 +47,10 @@ class JSONServer(HandleRequests):
             # print("hitting categories")
             response_body = view_all_categories()
             return self.response(response_body, status.HTTP_200_SUCCESS.value)
+        elif url["requested_resource"] == "posttags":
+            # Print("hitting posttags")
+            response_body = view_all_post_tags()
+            return self.response(response_body, status.HTTP_200_SUCCESS.value)
         elif url["requested_resource"] == "myposts":
             if url["pk"] != 0:
                 response_body = get_current_user_posts(url["pk"])
@@ -60,10 +65,16 @@ class JSONServer(HandleRequests):
             return self.response(
                 "", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value
             )
+            return self.response(
+                "", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value
+            )
         elif url["requested_resource"] == "comments":
             if url["pk"] != 0:
                 response_body = view_post_comments(url["pk"])
                 return self.response(response_body, status.HTTP_200_SUCCESS.value)
+            return self.response(
+                "", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value
+            )
             return self.response(
                 "", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value
             )
@@ -132,11 +143,11 @@ class JSONServer(HandleRequests):
             new_item = create_subscription(parsed_body)
             return self.response(
                 json.dumps(new_item), status.HTTP_201_SUCCESS_CREATED.value
-            )            
+            )
         elif url["requested_resource"] == "comments":
             new_item = create_comment(parsed_body)
             return self.response("", status.HTTP_201_SUCCESS_CREATED.value)
-            
+
         else:
             return self.response(
                 "Invalid resource",
@@ -166,7 +177,9 @@ class JSONServer(HandleRequests):
             if pk != 0:
                 successfully_deleted = delete_comment(pk)
                 if successfully_deleted:
-                    return self.response("Delete Successful", status.HTTP_200_SUCCESS.value)
+                    return self.response(
+                        "Delete Successful", status.HTTP_200_SUCCESS.value
+                    )
 
 
 def main():
