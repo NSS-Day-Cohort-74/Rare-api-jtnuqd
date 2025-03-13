@@ -6,6 +6,8 @@ DELETE FROM Categories;
 DROP TABLE IF EXISTS Categories;
 DELETE FROM Users;
 DROP TABLE IF EXISTS Users;
+DELETE FROM Comments;
+DROP TABLE IF EXISTS Comments;
 CREATE TABLE "Users" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "first_name" varchar,
@@ -276,3 +278,6 @@ VALUES (1, 1),
   -- Synthwave tag for music article
   (5, 5);
 -- Indie Games tag for game dev article
+
+INSERT INTO Subscriptions (follower_id, author_id, created_on)
+VALUES (2, 1, '2025-03-11');

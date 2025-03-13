@@ -67,6 +67,21 @@ def view_post_detail(pk):
         query_result = db_cursor.fetchone()
         dictionary_version_of_object = dict(query_result) if query_result else {}
 
+        db_cursor.execute(
+            """
+        SELECT t.id, t.label
+        FROM PostTags pt
+        JOIN Tags t ON pt.tag_id = t.id
+        WHERE pt.post_id = ?
+        """,
+            (pk,),
+        )
+
+        tags = [
+            {"id": tag["id"], "label": tag["label"]} for tag in db_cursor.fetchall()
+        ]
+        dictionary_version_of_object["tags"] = tags  # Add tags to post object
+
         serialized_result = json.dumps(dictionary_version_of_object)
     return serialized_result
 
@@ -93,6 +108,17 @@ def create_post(post_data):
         )
 
         new_post_id = db_cursor.lastrowid
+
+        if "tag_ids" in post_data and post_data["tag_ids"]:
+            for tag_id in post_data["tag_ids"]:
+                db_cursor.execute(
+                    """
+                    INSERT INTO PostTags 
+                    (post_id, tag_id)
+                    VALUES (?, ?)
+                    """,
+                    (new_post_id, tag_id),
+                )
 
     return new_post_id if new_post_id else None
 
@@ -128,6 +154,26 @@ def edit_post(pk, post_data):
                 pk,
             ),
         )
+
+        db_cursor.execute(
+            """
+            DELETE FROM PostTags
+            WHERE post_id = ?
+            """,
+            (pk,),
+        )
+
+        if "tag_ids" in post_data and post_data["tag_ids"]:
+            for tag_id in post_data["tag_ids"]:
+                db_cursor.execute(
+                    """
+                INSERT INTO PostTags
+                (post_id, tag_id)
+                VALUES (?, ?)
+                """,
+                    (pk, tag_id),
+                )
+
         rows_affected = db_cursor.rowcount
     return True if rows_affected > 0 else False
 
