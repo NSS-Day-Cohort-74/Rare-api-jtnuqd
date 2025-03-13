@@ -19,6 +19,7 @@ from views import (
     get_all_users,
     get_user_detail,
     create_subscription,
+    view_all_post_tags,
 )
 
 
@@ -43,6 +44,10 @@ class JSONServer(HandleRequests):
             # print("hitting categories")
             response_body = view_all_categories()
             return self.response(response_body, status.HTTP_200_SUCCESS.value)
+        elif url["requested_resource"] == "posttags":
+            # Print("hitting posttags")
+            response_body = view_all_post_tags()
+            return self.response(response_body, status.HTTP_200_SUCCESS.value)
         elif url["requested_resource"] == "myposts":
             if url["pk"] != 0:
                 response_body = get_current_user_posts(url["pk"])
@@ -54,12 +59,16 @@ class JSONServer(HandleRequests):
             if url["pk"] != 0:
                 response_body = view_follower_subscriptions(url["pk"])
                 return self.response(response_body, status.HTTP_200_SUCCESS.value)
-            return self.response("", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value)
+            return self.response(
+                "", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value
+            )
         elif url["requested_resource"] == "comments":
             if url["pk"] != 0:
                 response_body = view_post_comments(url["pk"])
                 return self.response(response_body, status.HTTP_200_SUCCESS.value)
-            return self.response("", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value)
+            return self.response(
+                "", status.HTTP_400_CLIENT_ERROR_BAD_REQUEST_DATA.value
+            )
         elif url["requested_resource"] == "users":
             if url["pk"] != 0:
                 response_body = get_user_detail(url["pk"])

@@ -12,3 +12,4 @@ from .category import view_all_categories, create_category
 from .subscribers import view_follower_subscriptions
 from .comments import view_post_comments
 from .subscriptions import create_subscription
+from .post_tags import view_all_post_tags
